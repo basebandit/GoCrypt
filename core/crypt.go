@@ -43,14 +43,14 @@ func Encrypt(text string, passphrase string) string {
 	_, err := rand.Read(salt)
 
 	if err != nil {
-		panic(err.Error())
+		return err.Error()
 	}
 
 	key := hashPassword([]byte(passphrase), salt)
 	block, err := aes.NewCipher(key)
 
 	if err != nil {
-		panic(err)
+		return err.Error()
 	}
 
 	plaintext := []byte(text)
@@ -60,7 +60,7 @@ func Encrypt(text string, passphrase string) string {
 	iv := ciphertext[:aes.BlockSize]
 	_, err = rand.Read(iv)
 	if err != nil {
-		panic(err)
+		return err.Error()
 	}
 
 	stream := cipher.NewCTR(block, iv)
