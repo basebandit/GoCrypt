@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/basebandit/GoCrypt/core"
+	"github.com/basebandit/GoCrypt/crypt"
 )
 
 func main() {
@@ -56,7 +56,7 @@ func main() {
 		}
 		pwd = *encryptPwd
 
-		ciphertext := core.Encrypt(msg, pwd)
+		ciphertext := crypt.Encrypt(msg, pwd)
 
 		fmt.Printf("%s\n", ciphertext)
 	}
@@ -75,7 +75,7 @@ func main() {
 			os.Exit(1)
 		}
 		pwd = *decryptPwd
-		plaintext := core.Decrypt(ciphertext, pwd)
+		plaintext := crypt.Decrypt(ciphertext, pwd)
 
 		fmt.Printf("%s\n", plaintext)
 	}
