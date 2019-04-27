@@ -13,11 +13,11 @@ Encrypt text using AES-256 in counter mode (CTR)
 $./gocrypt
 Usage of ./gocrypt:
 encrypt
-		-s plaintext to be encrypted.(Required)
-		-p encryption password.(Required)
+      -s plaintext to be encrypted.(Required)
+      -p encryption password.(Required)
 decrypt
-		-s ciphertext to be decrypted.(Required)
-		-p decryption password.(Required)
+      -s ciphertext to be decrypted.(Required)
+      -p decryption password.(Required)
 ```
 
 ### Encrypt command
