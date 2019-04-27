@@ -42,21 +42,21 @@ func genHMAC256(ciphertext, key []byte) []byte {
 //Encrypt encrypts using the key from Hashpassword() then
 //generates the mac of the encrypted text using GenHmac256
 //and then appends the ciphertext to its mac
-func Encrypt(text string, passphrase string) string {
+func Encrypt(text string, passphrase string) (string, error) {
 
 	//It is recommended that your salt be at least 8 bytes long
 	salt := make([]byte, 8)
 	_, err := rand.Read(salt)
 
 	if err != nil {
-		return err.Error()
+		return "", err
 	}
 
 	key := hashPassword([]byte(passphrase), salt)
 	block, err := aes.NewCipher(key)
 
 	if err != nil {
-		return err.Error()
+		return "", err
 	}
 
 	plaintext := []byte(text)
@@ -66,7 +66,7 @@ func Encrypt(text string, passphrase string) string {
 	iv := ciphertext[:aes.BlockSize]
 	_, err = rand.Read(iv)
 	if err != nil {
-		return err.Error()
+		return "", err
 	}
 
 	stream := cipher.NewCTR(block, iv)
@@ -76,7 +76,7 @@ func Encrypt(text string, passphrase string) string {
 
 	ciphertext = append(hmac, ciphertext...)
 
-	return b64.StdEncoding.EncodeToString([]byte("Gocrypt_" + string(salt) + string(ciphertext)))
+	return b64.StdEncoding.EncodeToString([]byte("Gocrypt_" + string(salt) + string(ciphertext))), nil
 }
 
 //Decrypt obtains the mac from the first 32 bytes of the ciphertext
@@ -86,15 +86,15 @@ func Encrypt(text string, passphrase string) string {
 //then obtains the ciphertext payload from the remaining slice of bytes:
 //			ciphertext[48:].
 //It is this ciphertext payload that is now XOR'd back to plaintext
-func Decrypt(encrypted string, passphrase string) string {
+func Decrypt(encrypted string, passphrase string) (string, error) {
 	ct, err := b64.StdEncoding.DecodeString(encrypted)
 
 	if err != nil {
-		return err.Error()
+		return "", err
 	}
 
-	if string(ct[:8]) != "Gocrypt_" {
-		return ""
+	if len(ct) < 64 && string(ct[:8]) != "Gocrypt_" {
+		return "", err
 	}
 
 	salt := ct[8:16]
@@ -105,7 +105,7 @@ func Decrypt(encrypted string, passphrase string) string {
 	block, err := aes.NewCipher(key)
 
 	if err != nil {
-		return err.Error()
+		return "", err
 	}
 
 	hmac := ct[0:32]
@@ -124,10 +124,10 @@ func Decrypt(encrypted string, passphrase string) string {
 		//len(hmac)+aes.BlockSize = 48
 		stream.XORKeyStream(plaintext, ct[len(hmac)+aes.BlockSize:])
 
-		return string(plaintext)
+		return string(plaintext), nil
 	}
 	hmacError := errors.New("Invalid hmac")
 
-	return hmacError.Error()
+	return "", hmacError
 
 }
