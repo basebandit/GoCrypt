@@ -56,7 +56,11 @@ func main() {
 		}
 		pwd = *encryptPwd
 
-		ciphertext := crypt.Encrypt(msg, pwd)
+		ciphertext, err := crypt.Encrypt(msg, pwd)
+
+		if err != nil {
+			panic(err)
+		}
 
 		fmt.Printf("%s\n", ciphertext)
 	}
@@ -75,7 +79,11 @@ func main() {
 			os.Exit(1)
 		}
 		pwd = *decryptPwd
-		plaintext := crypt.Decrypt(ciphertext, pwd)
+		plaintext, err := crypt.Decrypt(ciphertext, pwd)
+
+		if err != nil {
+			panic(err)
+		}
 
 		fmt.Printf("%s\n", plaintext)
 	}
