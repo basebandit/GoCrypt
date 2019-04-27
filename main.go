@@ -21,7 +21,7 @@ func main() {
 	decryptPwd := decryptCmd.String("p", "", "Decryption password.(Required)")
 
 	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, "Usage of %s:\n\t\tencrypt Encrypt command\n\t\t\t-s [Source]Plaintext to be encrypted.(Required)\n\t\t\tp [Password] Encryption password.(Required)\n\t\tdecrypt Decrypt command\n\t\t\t -s [Source]Ciphertext to be decrypted.(Required)\n\t\t\tp [Password] Decryption password.(Required)\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Usage of %s:\nencrypt\n\t-s plaintext to be encrypted.(Required)\n\t-p encryption password.(Required)\ndecrypt\n\t-s ciphertext to be decrypted.(Required)\n\t-p decryption password.(Required)\n", os.Args[0])
 
 		flag.PrintDefaults()
 	}
