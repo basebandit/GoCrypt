@@ -126,7 +126,7 @@ func Decrypt(encrypted string, passphrase string) (string, error) {
 
 		return string(plaintext), nil
 	}
-	hmacError := errors.New("Invalid hmac")
+	hmacError := errors.New("Invalid passphrase")
 
 	return "", hmacError
 
